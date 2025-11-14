@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@app/shared": ["src/shared/index.ts"],
+      "@app/shared/*": ["src/shared/*"],
+      "@app/domain": ["src/domain/index.ts"],
+      "@app/domain/*": ["src/domain/*"],
+      "@app/application": ["src/application/index.ts"],
+      "@app/application/*": ["src/application/*"],
+      "@app/infra": ["src/infra/index.ts"],
+      "@app/infra/*": ["src/infra/*"]
+    }
+  },
+  "include": ["src", "tests"],
+  "exclude": ["dist", "node_modules"],
+  "references": []
+}
