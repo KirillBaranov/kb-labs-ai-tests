@@ -8,13 +8,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const distDir = path.resolve(__dirname, '../../packages/plugin-cli/dist');
-const entryPath = path.join(distDir, 'rest/handlers/hello-handler.js');
+const entryPath = path.join(distDir, 'rest/handlers/status-handler.js');
 
 async function ensureBundle() {
   try {
     await access(entryPath, constants.R_OK);
   } catch {
-    console.error('Build artifacts missing. Run `pnpm --filter @kb-labs/plugin-template-cli run build` first.');
+    console.error('Build artifacts missing. Run `pnpm --filter @kb-labs/ai-tests-plugin run build` first.');
     process.exit(1);
   }
 }
@@ -22,12 +22,12 @@ async function ensureBundle() {
 async function main() {
   await ensureBundle();
 
-  const [, , nameArg] = process.argv;
-  const name = nameArg ?? 'Sandbox';
+  const [, , profileArg] = process.argv;
+  const profile = profileArg ?? 'sandbox';
 
   const moduleUrl = pathToFileURL(entryPath).href;
-  const { handleHello } = await import(moduleUrl);
-  const response = await handleHello({ name }, { runtime: { log: console.log } });
+  const { handleStatus } = await import(moduleUrl);
+  const response = await handleStatus({ profile }, { runtime: { log: console.log } });
 
   console.info('REST response:', response);
 }

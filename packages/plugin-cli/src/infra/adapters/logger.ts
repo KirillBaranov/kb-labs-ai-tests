@@ -4,7 +4,7 @@ export interface Logger {
   log(level: LogLevel, message: string, meta?: Record<string, unknown>): void;
 }
 
-export function createConsoleLogger(prefix = 'plugin-template'): Logger {
+export function createConsoleLogger(prefix = '@kb-labs/ai-tests'): Logger {
   return {
     log(level, message, meta) {
       const formatted = `[${level.toUpperCase()}][${prefix}] ${message}`;

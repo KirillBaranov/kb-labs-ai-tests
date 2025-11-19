@@ -17,5 +17,11 @@ export interface PluginContracts {
 export type { ApiContract, RestApiContract, RestRouteContract, SchemaReference } from './types/api.js';
 export type { ArtifactKind, ArtifactContractsMap, PluginArtifactContract, ArtifactExample } from './types/artifacts.js';
 export type { CommandContract, CommandContractsMap } from './types/commands.js';
-export type { WorkflowContract, WorkflowContractsMap, WorkflowStepContract } from './types/workflows.js';
+export type {
+  WorkflowContract,
+  WorkflowContractsMap,
+  WorkflowStepContract,
+  WorkflowEventContract
+} from './types/workflows.js';
+export * from './types/ai-tests.js';
 

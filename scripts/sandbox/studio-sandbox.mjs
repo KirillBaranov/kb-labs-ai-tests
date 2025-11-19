@@ -10,13 +10,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const distDir = path.resolve(__dirname, '../../packages/plugin-cli/dist');
-const entryPath = path.join(distDir, 'studio/widgets/hello-widget.js');
+const entryPath = path.join(distDir, 'studio/widgets/status-widget.js');
 
 async function ensureBundle() {
   try {
     await access(entryPath, constants.R_OK);
   } catch {
-    console.error('Build artifacts missing. Run `pnpm --filter @kb-labs/plugin-template-cli run build` first.');
+    console.error('Build artifacts missing. Run `pnpm --filter @kb-labs/ai-tests-plugin run build` first.');
     process.exit(1);
   }
 }
@@ -24,13 +24,19 @@ async function ensureBundle() {
 async function main() {
   await ensureBundle();
 
-  const [, , nameArg] = process.argv;
-  const target = nameArg ?? 'Studio';
-  const message = `Hello, ${target}!`;
+  const [, , targetsArg] = process.argv;
+  const pendingTargets = Number.parseInt(targetsArg ?? '4', 10);
 
   const moduleUrl = pathToFileURL(entryPath).href;
-  const { HelloWidget } = await import(moduleUrl);
-  const markup = renderToStaticMarkup(React.createElement(HelloWidget, { message, target }));
+  const { AiTestsStatusWidget } = await import(moduleUrl);
+  const markup = renderToStaticMarkup(
+    React.createElement(AiTestsStatusWidget, {
+      status: 'idle',
+      pendingTargets,
+      lastRunStatus: 'partial',
+      iterations: 1
+    })
+  );
 
   console.info('Rendered widget markup:\\n');
   console.info(markup);

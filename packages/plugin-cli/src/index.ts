@@ -1,6 +1,15 @@
 export { manifest } from './manifest.v2.js';
 export type { ManifestV2 } from '@kb-labs/plugin-manifest';
-export * from './cli/commands/hello/run.js';
+export * from './cli/commands/init/run.js';
+export * from './cli/commands/plan/run.js';
+export * from './cli/commands/generate/run.js';
+export * from './cli/commands/run/run.js';
+export * from './cli/commands/repair/run.js';
+export * from './cli/commands/audit/run.js';
 export * from './application/index.js';
 export * from './domain/index.js';
 export * from './shared/index.js';
+export * from './workflows/plan.js';
+export * from './workflows/generate.js';
+export * from './workflows/run.js';
+export * from './workflows/repair.js';

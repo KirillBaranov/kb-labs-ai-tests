@@ -1,142 +1,210 @@
 import type { ManifestV2 } from '@kb-labs/plugin-manifest';
+import {
+  PLAN_ARTIFACT_PATH,
+  RUN_ARTIFACT_PATH,
+  ITERATIONS_ARTIFACT_PATH,
+  METADATA_ARTIFACT_PATH,
+  AUDIT_ARTIFACT_PATH,
+  LOGS_DIR,
+  AI_TESTS_PLUGIN_ID
+} from './shared/constants.js';
+
+const schemaRef = (fragment: string) => ({
+  zod: `@kb-labs/ai-tests-contracts/schema#${fragment}`
+});
 
 export const manifest: ManifestV2 = {
   schema: 'kb.plugin/2',
-  id: '@kb-labs/plugin-template',
-  version: '0.1.0',
+  id: AI_TESTS_PLUGIN_ID,
+  version: '0.0.1',
   display: {
-    name: 'Plugin Template',
-    description: 'HelloWorld reference plugin demonstrating CLI, REST, and Studio surfaces.',
-    tags: ['template', 'hello', 'sample']
+    name: 'KB Labs AI Tests',
+    description: 'Plan, generate, run, repair, and audit automated tests with KB Mind context.',
+    tags: ['tests', 'ai', 'workflow']
   },
   cli: {
     commands: [
       {
-        id: 'template:hello',
-        group: 'template',
-        describe: 'Print a hello message from the plugin template.',
-        longDescription: 'Outputs a scoped greeting and optional target using shared formatting utilities.',
+        id: 'ai-tests:init',
+        group: 'ai-tests',
+        describe: 'Create aiTests config section and scaffold tests directory.',
+        handler: './cli/commands/init/run#runInitCommand',
         flags: [
+          { name: 'tests-dir', type: 'string', description: 'Custom tests directory path.' },
+          { name: 'dry-run', type: 'boolean', description: 'Preview actions without filesystem writes.' },
+          { name: 'profile', type: 'string', description: 'Label run with a logical profile (e.g. backend).' },
+          { name: 'debug', type: 'boolean', description: 'Enable verbose logger output.' },
+          { name: 'json', type: 'boolean', description: 'Emit JSON output.' }
+        ]
+      },
+      {
+        id: 'ai-tests:plan',
+        group: 'ai-tests',
+        describe: 'Analyse source globs and emit plan artifact.',
+        handler: './cli/commands/plan/run#runPlanCommand',
+        flags: [
+          { name: 'sources', type: 'string', description: 'Comma-separated globs overriding config.' },
+          { name: 'dry-run', type: 'boolean', description: 'Preview plan without writing artifact.' },
+          { name: 'profile', type: 'string', description: 'Label run with a logical profile.' },
+          { name: 'debug', type: 'boolean', description: 'Enable verbose logger output.' },
+          { name: 'json', type: 'boolean', description: 'Emit JSON output.' }
+        ]
+      },
+      {
+        id: 'ai-tests:generate',
+        group: 'ai-tests',
+        describe: 'Generate test suggestions for uncovered targets.',
+        handler: './cli/commands/generate/run#runGenerateCommand',
+        flags: [
+          { name: 'targets', type: 'string', description: 'Comma-separated file paths to limit scope.' },
           {
-            name: 'name',
+            name: 'strategy',
             type: 'string',
-            description: 'Name to greet.',
-            alias: 'n'
+            choices: ['suggest-only', 'write-and-run', 'repair-loop', 'llm-generate'],
+            description: 'Override default generation strategy.'
           },
-          {
-            name: 'json',
-            type: 'boolean',
-            description: 'Emit JSON payload instead of formatted text.'
-          }
-        ],
-        examples: [
-          'kb template hello',
-          'kb template hello --name Dev',
-          'kb template hello --json'
-        ],
-        handler: './cli/commands/hello/run#runHelloCommand'
+          { name: 'dry-run', type: 'boolean', description: 'Skip writing tests to disk.' },
+          { name: 'profile', type: 'string', description: 'Label run with a logical profile.' },
+          { name: 'debug', type: 'boolean', description: 'Enable verbose logger output.' },
+          { name: 'json', type: 'boolean', description: 'Emit JSON output.' }
+        ]
+      },
+      {
+        id: 'ai-tests:run',
+        group: 'ai-tests',
+        describe: 'Execute configured test runner and capture artifacts.',
+        handler: './cli/commands/run/run#runRunCommand',
+        flags: [
+          { name: 'dry-run', type: 'boolean', description: 'Skip executing runner, emit stub result.' },
+          { name: 'profile', type: 'string', description: 'Label run with a logical profile.' },
+          { name: 'debug', type: 'boolean', description: 'Enable verbose logger output.' },
+          { name: 'json', type: 'boolean', description: 'Emit JSON output.' }
+        ]
+      },
+      {
+        id: 'ai-tests:repair',
+        group: 'ai-tests',
+        describe: 'Use LLM suggestions to repair failing tests.',
+        handler: './cli/commands/repair/run#runRepairCommand',
+        flags: [
+          { name: 'max-attempts', type: 'number', description: 'Override max repair attempts.' },
+          { name: 'dry-run', type: 'boolean', description: 'Skip runner re-execution.' },
+          { name: 'profile', type: 'string', description: 'Label run with a logical profile.' },
+          { name: 'debug', type: 'boolean', description: 'Enable verbose logger output.' },
+          { name: 'json', type: 'boolean', description: 'Emit JSON output.' }
+        ]
+      },
+      {
+        id: 'ai-tests:audit',
+        group: 'ai-tests',
+        describe: 'Produce markdown summary combining plan, runs, and iterations.',
+        handler: './cli/commands/audit/run#runAuditCommand',
+        flags: [
+          { name: 'include-plan', type: 'boolean', description: 'Include plan insights (default true).' },
+          { name: 'include-runs', type: 'boolean', description: 'Include last run summary (default true).' },
+          { name: 'dry-run', type: 'boolean', description: 'Skip writing audit artifact, print summary only.' },
+          { name: 'profile', type: 'string', description: 'Label run with a logical profile.' },
+          { name: 'debug', type: 'boolean', description: 'Enable verbose logger output.' },
+          { name: 'json', type: 'boolean', description: 'Emit JSON output.' }
+        ]
       }
     ]
   },
   rest: {
-    basePath: '/v1/plugins/template',
+    basePath: '/v1/plugins/ai-tests',
+    defaults: {
+      timeoutMs: 120000
+    },
     routes: [
       {
         method: 'GET',
-        path: '/hello',
-        input: {
-          zod: './rest/schemas/hello-schema.js#HelloRequestSchema'
-        },
-        output: {
-          zod: './rest/schemas/hello-schema.js#HelloResponseSchema'
-        },
-        handler: './rest/handlers/hello-handler.js#handleHello',
-        permissions: {
-          fs: {
-            mode: 'read',
-            allow: [],
-            deny: ['**/*.key', '**/*.secret']
-          },
-          net: 'none',
-          env: {
-            allow: ['NODE_ENV']
-          },
-          quotas: {
-            timeoutMs: 5000,
-            memoryMb: 64,
-            cpuMs: 2500
-          },
-          capabilities: []
-        }
+        path: '/status',
+        output: schemaRef('StatusResponseSchema'),
+        handler: './rest/handlers/status-handler.js#handleStatus'
       }
     ]
   },
   studio: {
     widgets: [
       {
-        id: 'template.hello',
-        kind: 'card',
-        title: 'Hello Template',
-        description: 'Displays greeting output returned by the hello REST route.',
+        id: 'ai-tests/status',
+        kind: 'status',
+        title: 'AI Tests Status',
+        description: 'Plan coverage, last run, and repair attempts.',
         data: {
-          source: {
-            type: 'rest',
-            routeId: '/hello',
-            method: 'GET'
-          }
+          source: { type: 'mock', fixtureId: 'ai-tests/status' }
         },
-        layoutHint: {
-          w: 3,
-          h: 2,
-          minW: 2,
-          minH: 2
-        }
+        component: './studio/widgets/status-widget.js#AiTestsStatusWidget'
       }
     ],
-    menus: [
-      {
-        id: 'template-hello',
-        label: 'Template · Hello',
-        target: '/plugins/template/hello',
-        order: 0
-      }
-    ],
-    layouts: [
-      {
-        id: 'template.dashboard',
-        kind: 'grid',
-        title: 'Template Dashboard',
-        description: 'Starter layout that highlights the Hello widget.',
-        config: {
-          cols: {
-            sm: 2,
-            md: 4,
-            lg: 6
-          },
-          rowHeight: 6
-        }
-      }
-    ]
+    menus: [],
+    layouts: []
   },
-  capabilities: [],
+  artifacts: [
+    {
+      id: 'ai-tests.plan.json',
+      description: 'List of modules/files that require automated tests with coverage heuristics.',
+      pathTemplate: PLAN_ARTIFACT_PATH,
+      schemaRef: schemaRef('AiTestsPlanArtifactSchema')
+    },
+    {
+      id: 'ai-tests.run.json',
+      description: 'Aggregated result of the latest ai-tests:run execution.',
+      pathTemplate: RUN_ARTIFACT_PATH,
+      schemaRef: schemaRef('TestRunResultSchema')
+    },
+    {
+      id: 'ai-tests.iterations.json',
+      description: 'History of generate → run → repair attempts.',
+      pathTemplate: ITERATIONS_ARTIFACT_PATH,
+      schemaRef: schemaRef('IterationHistorySchema')
+    },
+    {
+      id: 'ai-tests.metadata.json',
+      description: 'Snapshot of configuration, runner mode, and strategy metadata.',
+      pathTemplate: METADATA_ARTIFACT_PATH,
+      schemaRef: schemaRef('AiTestsMetadataSchema')
+    },
+    {
+      id: 'ai-tests.audit.md',
+      description: 'Markdown summary generated by ai-tests:audit',
+      pathTemplate: AUDIT_ARTIFACT_PATH
+    },
+    {
+      id: 'ai-tests.log',
+      description: 'Streaming log produced by ai-tests:run',
+      pathTemplate: `${LOGS_DIR}/*.log`
+    }
+  ],
   permissions: {
     fs: {
-      mode: 'read',
-      allow: [],
+      mode: 'readWrite',
+      allow: ['tests/**', '.kb/artifacts/ai-tests/**', 'kb.config.json'],
       deny: ['**/*.key', '**/*.secret']
     },
     net: 'none',
     env: {
-      allow: ['NODE_ENV']
+      allow: ['NODE_ENV', 'KB_AI_TESTS_VERSION']
     },
     quotas: {
-      timeoutMs: 10000,
-      memoryMb: 128,
-      cpuMs: 5000
+      timeoutMs: 240000,
+      memoryMb: 256,
+      cpuMs: 10000
     },
     capabilities: []
   },
-  artifacts: []
+  setup: {
+    handler: './setup/handler.js#run',
+    describe: 'Provision AI Tests config defaults and artifact folders.',
+    permissions: {
+      fs: {
+        mode: 'readWrite',
+        allow: ['.kb/artifacts/ai-tests/**', 'tests/**', 'kb.config.json'],
+        deny: ['.git/**']
+      },
+      net: 'none'
+    }
+  }
 };
 
 export default manifest;
