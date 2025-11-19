@@ -1,7 +1,7 @@
+import { defineCommand, type CommandResult } from '@kb-labs/cli-command-kit';
 import type { InitTestsInput, InitTestsOutput } from '../../../application/index.js';
 import { initTests } from '../../../application/index.js';
-import type { AiTestsCliContext } from '../../context.js';
-import { resolveContext } from '../../context.js';
+import { createCliServices, type AiTestsCliContext } from '../../context.js';
 import { logCliInvocation } from '../../utils.js';
 
 export interface InitCommandArgs extends InitTestsInput {
@@ -10,11 +10,98 @@ export interface InitCommandArgs extends InitTestsInput {
   profile?: string;
 }
 
+type AiTestsInitFlags = {
+  'tests-dir': { type: 'string'; description?: string };
+  'dry-run': { type: 'boolean'; description?: string; default?: boolean };
+  profile: { type: 'string'; description?: string };
+  debug: { type: 'boolean'; description?: string; default?: boolean };
+  json: { type: 'boolean'; description?: string; default?: boolean };
+};
+
+type AiTestsInitResult = CommandResult & {
+  result?: InitTestsOutput;
+};
+
+export const run = defineCommand<AiTestsInitFlags, AiTestsInitResult>({
+  name: 'ai-tests:init',
+  flags: {
+    'tests-dir': {
+      type: 'string',
+      description: 'Custom tests directory path.',
+    },
+    'dry-run': {
+      type: 'boolean',
+      description: 'Preview actions without filesystem writes.',
+      default: false,
+    },
+    profile: {
+      type: 'string',
+      description: 'Label run with a logical profile (e.g. backend).',
+    },
+    debug: {
+      type: 'boolean',
+      description: 'Enable verbose logger output.',
+      default: false,
+    },
+    json: {
+      type: 'boolean',
+      description: 'Emit JSON output.',
+      default: false,
+    },
+  },
+  async handler(ctx, argv, flags) {
+    const context: AiTestsCliContext = {
+      stdout: ctx.output ? {
+        write: (text: string) => ctx.output.write(text),
+      } as NodeJS.WritableStream : process.stdout,
+      services: createCliServices(),
+    };
+    
+    const { services, stdout } = context;
+    const { json, debug, profile, ...input } = {
+      testsDir: flags['tests-dir'],
+      dryRun: flags['dry-run'],
+      json: flags.json,
+      debug: flags.debug,
+      profile: flags.profile,
+    };
+
+    logCliInvocation(services.logger, 'ai-tests:init', {
+      debug,
+      profile,
+      meta: { dryRun: Boolean(input.dryRun), testsDir: input.testsDir }
+    });
+
+    ctx.tracker.checkpoint('init');
+
+    const result = await initTests(input, services);
+    const profileLabel = profile ?? 'default';
+
+    ctx.tracker.checkpoint('complete');
+
+    if (json) {
+      ctx.output?.json(result);
+    } else {
+      ctx.output?.write(
+        [
+          'AI Tests initialization complete ✅',
+          `- profile: ${profileLabel}`,
+          `- testsDir: ${result.testsDir}`,
+          `- configUpdated: ${result.configUpdated ? 'yes' : 'no'}`,
+          `- created entries: ${result.created.length}`
+        ].join('\n') + '\n'
+      );
+    }
+
+    return { ok: true, result };
+  },
+});
+
 export async function runInitCommand(
   args: InitCommandArgs = {},
   context?: AiTestsCliContext
 ): Promise<InitTestsOutput> {
-  const { services, stdout } = resolveContext(context);
+  const { services, stdout } = context ?? { services: createCliServices(), stdout: process.stdout };
   const { json, debug, profile, ...input } = args;
 
   logCliInvocation(services.logger, 'ai-tests:init', {
