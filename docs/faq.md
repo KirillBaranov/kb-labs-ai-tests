@@ -2,7 +2,7 @@
 
 ## Build fails with “Cannot resolve @kb-labs/...”
 
-The template expects sibling repositories (`kb-labs-plugin`, `kb-labs-shared`, `kb-labs-devkit`) to be available for local linking. Verify the relative paths in `packages/plugin-cli/package.json`, or replace them with published package versions if you prefer registry installs.
+The workspace links to neighbouring repositories (`kb-labs-plugin`, `kb-labs-shared`, `kb-labs-devkit`, etc.) via `tsconfig.paths.json`. Run `pnpm devkit:paths` after cloning or whenever the path map drifts. If you prefer registry versions, replace `link:`/`workspace:` entries in `package.json`.
 
 ## `pnpm lint` complains about missing files in the project service
 
@@ -14,19 +14,19 @@ The template config removes explicit `rootDir` to avoid conflicts. If you reintr
 
 ## Sandbox scripts report “Build artifacts missing”
 
-Run `pnpm --filter @kb-labs/plugin-template-cli run build` first. Sandboxes operate on compiled outputs in `packages/plugin-cli/dist/`.
+Run `pnpm --filter @kb-labs/ai-tests-plugin run build` first. Sandboxes operate on compiled outputs in `packages/plugin-cli/dist/`.
 
 ## CLI command exits without output
 
-The HelloWorld command prints to `stdout`. If you run it via Node directly, ensure `process.stdout` is not swapped out by your shell. Using the provided sandbox (`pnpm sandbox:cli`) mimics the plugin runtime behaviour.
+All commands write to `stdout` via the resolver context. If you run a compiled handler manually, pass a `stdout` with a `write` method (the sandboxes do this for you). When using `kb ai-tests ...`, the host CLI wires everything automatically.
 
 ## REST handler logs unexpected context
 
-The sandbox passes `console.log` as the runtime logger. In the actual plugin runtime, `ctx.runtime.log` is provided by the host. To simulate production logs, adjust `scripts/sandbox/rest-sandbox.mjs`.
+The sandbox passes `console.log` as the runtime logger. In the plugin runtime, `ctx.runtime.log` comes from the KB host and includes request IDs. Adjust `scripts/sandbox/rest-sandbox.mjs` to mimic your environment if you need structured logs.
 
 ## Studio sandbox prints raw markup
 
-`sandbox:studio` renders the widget using `react-dom/server` so you can inspect the structure quickly. For visual verification, import the component into a React playground and feed it the same props.
+`sandbox:studio` renders the status widget with `react-dom/server` so you can inspect the HTML quickly. For visual previews, import `AiTestsStatusWidget` into Storybook or another React playground.
 
 ## Manifest change checklist
 

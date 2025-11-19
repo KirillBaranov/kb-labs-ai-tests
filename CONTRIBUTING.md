@@ -8,8 +8,8 @@ Thanks for helping grow the KB Labs plugin ecosystem!
 
 ```bash
 pnpm install
-pnpm --filter @kb-labs/plugin-template-cli run build # optional warm-up
-pnpm --filter @kb-labs/plugin-template-cli test
+pnpm --filter @kb-labs/ai-tests-plugin run build # optional warm-up
+pnpm --filter @kb-labs/ai-tests-plugin test
 ```
 
 Handy scripts:

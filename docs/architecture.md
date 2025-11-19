@@ -1,60 +1,64 @@
 # Architecture Guide
 
-The plugin template adopts a pragmatic layered architecture inspired by Domain-Driven Design and hexagonal patterns. The goal is to keep surfaces thin while offering clear boundaries for contributors.
+AI Tests follows a layered architecture to keep CLI/REST/Studio surfaces thin while the core rules live in reusable domain objects.
 
-## Layers
+## Layer stack
 
-| Layer | Purpose | Depends on |
-|-------|---------|------------|
-| **shared** | Cross-cutting constants, helpers, types | – |
-| **domain** | Pure entities and value objects | shared |
-| **application** | Use-cases orchestrating domain logic | domain, shared |
-| **infrastructure** | Adapters to external systems (logging, fs, net) | shared |
-| **cli / rest / studio** | Interface adapters wiring runtime requests to use-cases | application, shared, infrastructure |
+| Layer | Responsibilities | Key modules |
+| ----- | ---------------- | ----------- |
+| `shared/` | Constants such as artifact paths, default config, and kb.config filename. | `shared/constants.ts` |
+| `domain/` | Pure entities/value objects (`TestPlan`, `IterationHistory`, `AiTestsConfigModel`, `TestStatus`). Enforces invariants like `maxAttempts` and `needsReview`. | `domain/plan.ts`, `domain/iteration.ts`, `domain/config.ts`, `domain/status.ts` |
+| `application/` | Use-cases orchestrating workflows (`initTests`, `planTests`, `generateTests`, `runTests`, `repairTests`, `auditTests`). No filesystem or network code. | `application/use-cases/*.ts` |
+| `infra/` | Adapters injected into use-cases: workspace (safe FS writes + dry-runs), test runner (shell + mock), Mind client stub, tests generator stub, logger. | `infra/adapters/*.ts`, `infra/services.ts` |
+| `cli/rest/studio` | Request/response glue that parses flags/payloads and calls application services. | `cli/commands/*`, `rest/handlers/status-handler.ts`, `studio/widgets/status-widget.tsx` |
+| `workflows/` | KB workflow entry points that call the same application use-cases as the CLI. | `workflows/*.ts` |
 
-Principles:
+## Domain rules worth noting
 
-- Interface layers (CLI, REST, Studio) should not contain business logic—delegate to application use-cases.
-- Application coordinates domain behaviour and defines contracts for infrastructure adapters.
-- Domain remains pure and side-effect free.
-- Shared utilities stay lightweight and framework-agnostic.
+1. **No silent overwrites** – `workspace.writeGeneratedTests` skips existing files and `TestPlan.classifyGeneration` downgrades conflicting suggestions to `needsReview`.
+2. **`maxAttempts` guardrail** – `AiTestsConfigModel.ensureAttemptWithinLimit` throws when the repair loop would exceed the configured attempts.
+3. **Iteration states** – `IterationRecordBuilder` ensures every iteration captures `startedAt`, `completedAt`, `status`, and optional notes/fixes.
+4. **Runner modes** – the configuration layer normalises runner definitions into `{ mode, command, env, cwd }` regardless of how they are specified in `kb.config.json`.
+5. **Needs-review flagging** – generation and repair results automatically append warnings when heuristics detect low confidence (existing tests, explicit warnings, repair flow).
 
-## Folder layout
+## Infrastructure adapters
 
-```
-packages/plugin-cli/src/
-├── shared/
-├── domain/
-├── application/
-├── infrastructure/
-├── cli/
-├── rest/
-└── studio/
-```
+- **Workspace adapter** – wraps `fs/promises`, writes JSON artifacts under `.kb/artifacts/ai-tests`, keeps dry-run and suggestion helpers, and ensures directories exist before writes.
+- **TestRunnerAdapter** – executes shell commands via `child_process.exec` or returns predictable fixtures in `mock` mode for CI.
+- **MindTestClient** – stub returning deterministic context so tests don’t rely on network access.
+- **TestsGenerator** – mock generator that produces deterministic Vitest snippets and marks repairs as `needsReview`.
+- **Logger** – thin wrapper around `console.log`, but the interface lets us swap to structured logging later.
 
-## Manifest as the contract
+All adapters are wired together in `infra/services.ts`. CLI commands and workflows call `createCliServices()` by default; tests inject their own in-memory services.
 
-`src/manifest.v2.ts` ties all surfaces together:
+## Manifest integration
 
-- Declares CLI commands with metadata, flags, and handlers.
-- Lists REST routes, schemas, permissions, and error specs.
-- Registers Studio widgets, menus, and layouts plus their data sources.
-- Documents global capabilities and artefacts.
+`src/manifest.v2.ts` gathers:
 
-Any change to CLI/REST/Studio should update the manifest and include tests + docs.
+- CLI command declarations (IDs, descriptions, handlers, flags).
+- Workflow handlers for plan/generate/run/repair.
+- Artifact metadata (IDs aligned with the contracts package).
+- REST status route plus FS/NET permissions.
+- Studio widget metadata + mock data source.
+
+Touching any surface requires updating the manifest and the contracts manifest (`packages/contracts/src/contract.ts`) to keep guarantees in sync.
 
 ## Testing strategy
 
-- **Unit**: domain entities and application use-cases.
-- **Integration**: CLI commands, REST handlers, Studio widgets (smoke tests).
-- **Manual**: sandbox scripts (`pnpm sandbox:*`) to exercise compiled outputs.
+| Scope | Example |
+| ----- | ------- |
+| Contracts | `packages/contracts/tests/ai-tests.schema.test.ts` validates schemas against happy/sad payloads. |
+| Domain | `packages/plugin-cli/tests/domain/config.spec.ts` exercises `AiTestsConfigModel` and `IterationHistory`. |
+| Application | `packages/plugin-cli/tests/application/ai-tests-flow.spec.ts` runs an in-memory plan→generate→run→repair lifecycle. |
+| REST | `packages/plugin-cli/tests/rest/status-handler.spec.ts` smoke tests the `/status` handler. |
 
-## Extensibility tips
+Use `pnpm sandbox:*` scripts for manual verification of compiled artifacts.
 
-- Start simple—add logic to application/use-cases first, refactor into new domain objects as complexity grows.
-- Infrastructure adapters should be stateless and injected; declare required permissions in the manifest.
-- Record significant architecture decisions or deviations in `docs/adr/`.
+## Extending the system
 
-This structure keeps the template approachable for new contributors while offering a clear path to scale more sophisticated plugins.
+- Create new domain objects before touching infrastructure whenever you add cross-cutting rules.
+- Keep adapters stateless and injectable; declare new permissions in both manifests.
+- Record deviations or major decisions in `docs/adr/`.
+- When adding artifacts/commands/workflows, update both `packages/contracts` and `manifest.v2.ts`, then cover them with Vitest specs.
 
 
