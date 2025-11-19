@@ -43,6 +43,8 @@
   },
   "dependencies": {
     "@kb-labs/ai-tests-contracts": "workspace:*",
+    "@kb-labs/cli-command-kit": "workspace:*",
+    "@kb-labs/core-sys": "link:../../../kb-labs-core/packages/sys",
     "@kb-labs/plugin-manifest": "link:../../../kb-labs-plugin/packages/manifest",
     "@kb-labs/shared-cli-ui": "link:../../../kb-labs-shared/packages/cli-ui",
     "fast-glob": "^3.3.2",
