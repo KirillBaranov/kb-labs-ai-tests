@@ -1,0 +1,22 @@
+{
+  "$schema": "https://config.kb-labs.dev/schemas/kb.config.json",
+  "aiTests": {
+    "sources": [
+      "src/**/*.{ts,tsx}",
+      "packages/**/*.{ts,tsx}",
+      "apps/**/*.{ts,tsx}"
+    ],
+    "testsDir": "tests",
+    "runner": {
+      "mode": "shell",
+      "command": "pnpm test"
+    },
+    "strategy": "llm-generate",
+    "maxAttempts": 3,
+    "thresholds": {
+      "repair": "medium",
+      "allowedFailurePercentage": 0.1
+    }
+  }
+}
+
