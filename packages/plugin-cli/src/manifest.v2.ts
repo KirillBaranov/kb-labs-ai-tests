@@ -1,4 +1,9 @@
-import type { ManifestV2 } from '@kb-labs/plugin-manifest';
+import { createManifestV2 } from '@kb-labs/plugin-manifest';
+import { pluginContractsManifest } from '@kb-labs/ai-tests-contracts';
+
+/**
+ * Level 2: Типизация через contracts для автодополнения и проверки ID
+ */
 import {
   PLAN_ARTIFACT_PATH,
   RUN_ARTIFACT_PATH,
@@ -13,7 +18,7 @@ const schemaRef = (fragment: string) => ({
   zod: `@kb-labs/ai-tests-contracts/schema#${fragment}`
 });
 
-export const manifest: ManifestV2 = {
+export const manifest = createManifestV2<typeof pluginContractsManifest>({
   schema: 'kb.plugin/2',
   id: AI_TESTS_PLUGIN_ID,
   version: '0.0.1',
@@ -205,6 +210,6 @@ export const manifest: ManifestV2 = {
       net: 'none'
     }
   }
-};
+});
 
 export default manifest;
