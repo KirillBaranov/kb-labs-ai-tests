@@ -69,15 +69,18 @@ importers:
 
   packages/plugin-cli:
     dependencies:
+      '@kb-labs/ai-tests-contracts':
+        specifier: link:../contracts
+        version: link:../contracts
       '@kb-labs/plugin-manifest':
         specifier: link:../../../kb-labs-plugin/packages/manifest
         version: link:../../../kb-labs-plugin/packages/manifest
-      '@kb-labs/plugin-template-contracts':
-        specifier: link:../contracts
-        version: link:../contracts
       '@kb-labs/shared-cli-ui':
         specifier: link:../../../kb-labs-shared/packages/cli-ui
         version: link:../../../kb-labs-shared/packages/cli-ui
+      fast-glob:
+        specifier: ^3.3.2
+        version: 3.3.3
       react:
         specifier: ^18.3.0
         version: 18.3.1

@@ -18,8 +18,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@kb-labs/plugin-template-contracts': contractsDir + 'index.ts',
-      '@kb-labs/plugin-template-contracts/*': contractsDir + '*',
+      '@kb-labs/ai-tests-contracts': contractsDir + 'index.ts',
+      '@kb-labs/ai-tests-contracts/*': contractsDir + '*',
       '@app/shared': sharedDir + 'index.ts',
       '@app/shared/*': sharedDir + '*',
       '@app/domain': domainDir + 'index.ts',

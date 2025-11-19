@@ -1,8 +1,8 @@
 {
-  "name": "@kb-labs/plugin-template",
-  "version": "0.1.0",
+  "name": "@kb-labs/ai-tests",
+  "version": "0.0.1",
   "private": true,
-  "description": "Reference plugin template for the KB Labs ecosystem with devkit-powered tooling.",
+  "description": "KB Labs AI Tests plugin workspace (contracts + CLI + workflows).",
   "type": "module",
   "author": {
     "name": "Kirill Baranov",
@@ -11,12 +11,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kirill-baranov/kb-labs-plugin-template.git"
+    "url": "https://github.com/kirill-baranov/kb-labs-ai-tests.git"
   },
   "bugs": {
-    "url": "https://github.com/kirill-baranov/kb-labs-plugin-template/issues"
+    "url": "https://github.com/kirill-baranov/kb-labs-ai-tests/issues"
   },
-  "homepage": "https://github.com/kirill-baranov/kb-labs-plugin-template#readme",
+  "homepage": "https://github.com/kirill-baranov/kb-labs-ai-tests#readme",
   "workspaces": [
     "apps/*",
     "packages/*"

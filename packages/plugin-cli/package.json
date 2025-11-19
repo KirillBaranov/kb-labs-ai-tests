@@ -1,9 +1,9 @@
 {
-  "name": "@kb-labs/plugin-template-cli",
-  "version": "0.1.0",
+  "name": "@kb-labs/ai-tests-plugin",
+  "version": "0.0.1",
   "type": "module",
   "private": true,
-  "description": "Reference CLI package for KB Labs plugin template with manifest, CLI, REST, and Studio layers.",
+  "description": "CLI + workflows implementation for KB Labs AI Tests.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -15,9 +15,9 @@
       "import": "./dist/manifest.v2.js",
       "types": "./dist/manifest.v2.d.ts"
     },
-    "./studio/widgets/hello": {
-      "import": "./dist/studio/widgets/hello-widget.js",
-      "types": "./dist/studio/widgets/hello-widget.d.ts"
+    "./studio/widgets/status": {
+      "import": "./dist/studio/widgets/status-widget.js",
+      "types": "./dist/studio/widgets/status-widget.d.ts"
     },
     "./dist/*": "./dist/*"
   },
@@ -31,7 +31,7 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "pretype-check": "pnpm --filter @kb-labs/plugin-template-cli build",
+    "pretype-check": "pnpm --filter @kb-labs/ai-tests-plugin build",
     "clean": "rimraf dist",
     "build": "tsup --config tsup.config.ts",
     "dev": "tsup --config tsup.config.ts --watch",
@@ -42,9 +42,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@kb-labs/ai-tests-contracts": "workspace:*",
     "@kb-labs/plugin-manifest": "link:../../../kb-labs-plugin/packages/manifest",
-    "@kb-labs/plugin-template-contracts": "link:../contracts",
     "@kb-labs/shared-cli-ui": "link:../../../kb-labs-shared/packages/cli-ui",
+    "fast-glob": "^3.3.2",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "zod": "^3.23.8"

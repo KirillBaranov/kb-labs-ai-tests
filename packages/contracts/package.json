@@ -1,9 +1,9 @@
 {
-  "name": "@kb-labs/plugin-template-contracts",
-  "version": "0.1.0",
+  "name": "@kb-labs/ai-tests-contracts",
+  "version": "0.0.1",
   "type": "module",
   "private": true,
-  "description": "Public contracts package for the KB Labs plugin template. Provides typed guarantees about artifacts, commands, workflows, and APIs.",
+  "description": "Contracts package for KB Labs AI Tests (artifacts, commands, workflows, config).",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -28,7 +28,7 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "pretype-check": "pnpm --filter @kb-labs/plugin-template-contracts build",
+    "pretype-check": "pnpm --filter @kb-labs/ai-tests-contracts build",
     "clean": "rimraf dist",
     "build": "tsup --config tsup.config.ts",
     "dev": "tsup --config tsup.config.ts --watch",
