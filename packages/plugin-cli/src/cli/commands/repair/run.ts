@@ -85,15 +85,24 @@ export const run = defineCommand<AiTestsRepairFlags, AiTestsRepairResult>({
     if (json) {
       ctx.output?.json(result);
     } else {
-      ctx.output?.write(
-        [
-          'AI Tests repair attempt logged 🔁',
-          `- profile: ${profileLabel}`,
-          `- iteration: ${result.iteration.attemptIndex}`,
-          `- status: ${result.iteration.status}`,
-          `- maxAttemptsReached: ${result.maxAttemptsReached}`
-        ].join('\n') + '\n'
-      );
+      const status = result.maxAttemptsReached ? 'warning' : 'success';
+      const outputText = ctx.output?.ui.sideBox({
+        title: 'AI Tests Repair',
+        sections: [
+          {
+            items: [
+              `${ctx.output.ui.symbols.success} ${ctx.output.ui.colors.success('Repair attempt logged')}`,
+              `Profile: ${profileLabel}`,
+              `Iteration: ${result.iteration.attemptIndex}`,
+              `Status: ${result.iteration.status}`,
+              `Max attempts reached: ${result.maxAttemptsReached}`,
+            ],
+          },
+        ],
+        status,
+        timing: ctx.tracker.total(),
+      });
+      ctx.output?.write(outputText);
     }
 
     return { ok: true, result };

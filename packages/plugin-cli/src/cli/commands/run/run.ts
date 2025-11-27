@@ -76,15 +76,24 @@ export const run = defineCommand<AiTestsRunFlags, AiTestsRunResult>({
     if (json) {
       ctx.output?.json(result);
     } else {
-      ctx.output?.write(
-        [
-          'AI Tests runner finished 🧪',
-          `- profile: ${profileLabel}`,
-          `- status: ${result.result.status}`,
-          `- runPath: ${result.runPath}`,
-          `- logPath: ${result.logPath}`
-        ].join('\n') + '\n'
-      );
+      const status = result.result.status === 'pass' ? 'success' : 'error';
+      const outputText = ctx.output?.ui.sideBox({
+        title: 'AI Tests Run',
+        sections: [
+          {
+            items: [
+              `${ctx.output.ui.symbols.success} ${ctx.output.ui.colors.success('Runner finished')}`,
+              `Profile: ${profileLabel}`,
+              `Status: ${result.result.status}`,
+              `Run path: ${result.runPath}`,
+              `Log path: ${result.logPath}`,
+            ],
+          },
+        ],
+        status,
+        timing: ctx.tracker.total(),
+      });
+      ctx.output?.write(outputText);
     }
 
     return { ok: true, result };

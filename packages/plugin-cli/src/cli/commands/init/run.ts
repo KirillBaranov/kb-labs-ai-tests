@@ -82,15 +82,23 @@ export const run = defineCommand<AiTestsInitFlags, AiTestsInitResult>({
     if (json) {
       ctx.output?.json(result);
     } else {
-      ctx.output?.write(
-        [
-          'AI Tests initialization complete ✅',
-          `- profile: ${profileLabel}`,
-          `- testsDir: ${result.testsDir}`,
-          `- configUpdated: ${result.configUpdated ? 'yes' : 'no'}`,
-          `- created entries: ${result.created.length}`
-        ].join('\n') + '\n'
-      );
+      const outputText = ctx.output?.ui.sideBox({
+        title: 'AI Tests Init',
+        sections: [
+          {
+            items: [
+              `${ctx.output.ui.symbols.success} ${ctx.output.ui.colors.success('Initialization complete')}`,
+              `Profile: ${profileLabel}`,
+              `Tests dir: ${result.testsDir}`,
+              `Config updated: ${result.configUpdated ? 'yes' : 'no'}`,
+              `Created entries: ${result.created.length}`,
+            ],
+          },
+        ],
+        status: 'success',
+        timing: ctx.tracker.total(),
+      });
+      ctx.output?.write(outputText);
     }
 
     return { ok: true, result };

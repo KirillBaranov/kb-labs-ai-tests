@@ -1,9 +1,9 @@
 /**
  * @module Logger adapter for AI Tests plugin
  * Wrapper around @kb-labs/core-sys/logging
- * 
- * Prefers ctx.runtime.log if available (unified logging through runtime)
- * Falls back to direct getLogger if runtime.log is not available
+ *
+ * Prefers ctx.logger if available (unified logging through runtime)
+ * Falls back to direct getLogger if logger is not available
  */
 
 import { getLogger, type Logger as CoreLogger } from '@kb-labs/core-sys/logging';
@@ -17,32 +17,43 @@ export interface Logger {
 
 /**
  * Create console logger adapter
- * 
+ *
  * Uses unified logging system:
- * - If ctx is provided and has runtime.log, uses ctx.runtime.log (preferred)
+ * - If ctx is provided and has logger, uses ctx.logger (preferred)
  * - Otherwise uses getLogger from @kb-labs/core-sys/logging
- * 
+ *
  * @param prefix - Logger category prefix
- * @param ctx - Optional plugin context with runtime.log
+ * @param ctx - Optional plugin context with logger
  */
 export function createConsoleLogger(
   prefix = 'ai-tests',
   ctx?: {
-    runtime?: {
-      log?: (
-        level: 'debug' | 'info' | 'warn' | 'error',
-        msg: string,
-        meta?: Record<string, unknown>
-      ) => void;
+    logger?: {
+      debug: (msg: string, meta?: Record<string, unknown>) => void;
+      info: (msg: string, meta?: Record<string, unknown>) => void;
+      warn: (msg: string, meta?: Record<string, unknown>) => void;
+      error: (msg: string, meta?: Record<string, unknown>) => void;
     };
   }
 ): Logger {
-  // If ctx.runtime.log is available, use unified plugin logger
-  if (ctx?.runtime?.log) {
-    const pluginLogger = createPluginLogger(ctx, `ai-tests:${prefix}`);
+  // If ctx.logger is available, use unified plugin logger
+  if (ctx?.logger) {
     return {
       log(level, message, meta) {
-        pluginLogger.log(level, message, meta);
+        switch (level) {
+          case 'debug':
+            ctx.logger.debug(message, meta);
+            break;
+          case 'info':
+            ctx.logger.info(message, meta);
+            break;
+          case 'warn':
+            ctx.logger.warn(message, meta);
+            break;
+          case 'error':
+            ctx.logger.error(message, meta);
+            break;
+        }
       }
     };
   }

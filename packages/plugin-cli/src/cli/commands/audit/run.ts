@@ -90,15 +90,23 @@ export const run = defineCommand<AiTestsAuditFlags, AiTestsAuditResult>({
     if (json) {
       ctx.output?.json(result);
     } else {
-      ctx.output?.write(
-        [
-          'AI Tests audit summary 📊',
-          `- profile: ${profileLabel}`,
-          `- report: ${result.reportPath}`,
-          `- score: ${result.score}`,
-          `- ${result.summary}`
-        ].join('\n') + '\n'
-      );
+      const outputText = ctx.output?.ui.sideBox({
+        title: 'AI Tests Audit',
+        sections: [
+          {
+            items: [
+              `${ctx.output.ui.symbols.success} ${ctx.output.ui.colors.success('Audit summary')}`,
+              `Profile: ${profileLabel}`,
+              `Report: ${result.reportPath}`,
+              `Score: ${result.score}`,
+              `${result.summary}`,
+            ],
+          },
+        ],
+        status: 'success',
+        timing: ctx.tracker.total(),
+      });
+      ctx.output?.write(outputText);
     }
 
     return { ok: true, result };

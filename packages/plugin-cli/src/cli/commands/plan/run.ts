@@ -100,15 +100,23 @@ export const run = defineCommand<AiTestsPlanFlags, AiTestsPlanResult>({
     if (json) {
       ctx.output?.json(result);
     } else {
-      ctx.output?.write(
-        [
-          'AI Tests plan complete 📋',
-          `- profile: ${profileLabel}`,
-          `- planPath: ${result.planPath}`,
-          `- targets: ${result.totalTargets}`,
-          `- uncovered: ${result.notCovered}`
-        ].join('\n') + '\n'
-      );
+      const outputText = ctx.output?.ui.sideBox({
+        title: 'AI Tests Plan',
+        sections: [
+          {
+            items: [
+              `${ctx.output.ui.symbols.success} ${ctx.output.ui.colors.success('Plan complete')}`,
+              `Profile: ${profileLabel}`,
+              `Plan path: ${result.planPath}`,
+              `Targets: ${result.totalTargets}`,
+              `Uncovered: ${result.notCovered}`,
+            ],
+          },
+        ],
+        status: 'success',
+        timing: ctx.tracker.total(),
+      });
+      ctx.output?.write(outputText);
     }
 
     return { ok: true, result };

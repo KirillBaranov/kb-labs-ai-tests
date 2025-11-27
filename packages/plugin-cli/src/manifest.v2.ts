@@ -30,7 +30,7 @@ export const manifest = createManifestV2<typeof pluginContractsManifest>({
   cli: {
     commands: [
       {
-        id: 'ai-tests:init',
+        id: 'init',
         group: 'ai-tests',
         describe: 'Create aiTests config section and scaffold tests directory.',
         handler: './cli/commands/init/run#runInitCommand',
@@ -43,7 +43,7 @@ export const manifest = createManifestV2<typeof pluginContractsManifest>({
         ]
       },
       {
-        id: 'ai-tests:plan',
+        id: 'plan',
         group: 'ai-tests',
         describe: 'Analyse source globs and emit plan artifact.',
         handler: './cli/commands/plan/run#runPlanCommand',
@@ -56,7 +56,7 @@ export const manifest = createManifestV2<typeof pluginContractsManifest>({
         ]
       },
       {
-        id: 'ai-tests:generate',
+        id: 'generate',
         group: 'ai-tests',
         describe: 'Generate test suggestions for uncovered targets.',
         handler: './cli/commands/generate/run#runGenerateCommand',
@@ -75,7 +75,7 @@ export const manifest = createManifestV2<typeof pluginContractsManifest>({
         ]
       },
       {
-        id: 'ai-tests:run',
+        id: 'run',
         group: 'ai-tests',
         describe: 'Execute configured test runner and capture artifacts.',
         handler: './cli/commands/run/run#runRunCommand',
@@ -87,7 +87,7 @@ export const manifest = createManifestV2<typeof pluginContractsManifest>({
         ]
       },
       {
-        id: 'ai-tests:repair',
+        id: 'repair',
         group: 'ai-tests',
         describe: 'Use LLM suggestions to repair failing tests.',
         handler: './cli/commands/repair/run#runRepairCommand',
@@ -100,7 +100,7 @@ export const manifest = createManifestV2<typeof pluginContractsManifest>({
         ]
       },
       {
-        id: 'ai-tests:audit',
+        id: 'audit',
         group: 'ai-tests',
         describe: 'Produce markdown summary combining plan, runs, and iterations.',
         handler: './cli/commands/audit/run#runAuditCommand',

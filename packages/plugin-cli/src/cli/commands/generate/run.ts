@@ -111,15 +111,23 @@ export const run = defineCommand<AiTestsGenerateFlags, AiTestsGenerateResult>({
     if (json) {
       ctx.output?.json(result);
     } else {
-      ctx.output?.write(
-        [
-          'AI Tests generation complete ✍️',
-          `- profile: ${profileLabel}`,
-          `- generated suggestions: ${result.generated.length}`,
-          `- artifacts: ${result.artifacts.length}`,
-          `- summary: ${result.summary}`
-        ].join('\n') + '\n'
-      );
+      const outputText = ctx.output?.ui.sideBox({
+        title: 'AI Tests Generate',
+        sections: [
+          {
+            items: [
+              `${ctx.output.ui.symbols.success} ${ctx.output.ui.colors.success('Generation complete')}`,
+              `Profile: ${profileLabel}`,
+              `Generated suggestions: ${result.generated.length}`,
+              `Artifacts: ${result.artifacts.length}`,
+              `Summary: ${result.summary}`,
+            ],
+          },
+        ],
+        status: 'success',
+        timing: ctx.tracker.total(),
+      });
+      ctx.output?.write(outputText);
     }
 
     return { ok: true, result };
