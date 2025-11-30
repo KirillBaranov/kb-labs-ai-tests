@@ -1,4 +1,4 @@
-import type { Logger } from '../infra/adapters/logger.js';
+import type { Logger } from '../infra/adapters/logger';
 
 interface LogOptions {
   debug?: boolean;

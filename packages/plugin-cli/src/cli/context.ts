@@ -1,5 +1,5 @@
-import type { AiTestsApplicationServices } from '../application/types.js';
-import { createCliServices } from '../infra/services.js';
+import type { AiTestsApplicationServices } from '../application/types';
+import { createCliServices } from '../infra/services';
 
 export interface AiTestsCliContext {
   services?: AiTestsApplicationServices;
