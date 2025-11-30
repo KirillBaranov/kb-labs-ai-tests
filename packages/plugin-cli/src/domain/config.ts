@@ -4,7 +4,7 @@ import type {
   AiTestsRunnerMode,
   AiTestsRunnerSetting
 } from '@kb-labs/ai-tests-contracts';
-import { DEFAULT_AI_TESTS_CONFIG, DEFAULT_TEST_RUN_COMMAND } from '../shared/constants.js';
+import { DEFAULT_AI_TESTS_CONFIG, DEFAULT_TEST_RUN_COMMAND } from '../shared/constants';
 
 export type NormalizedAiTestsConfig = Omit<AiTestsConfig, 'runner'> & {
   runner: AiTestsRunnerConfig;
