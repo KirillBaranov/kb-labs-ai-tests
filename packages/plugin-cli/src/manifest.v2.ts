@@ -12,7 +12,7 @@ import {
   AUDIT_ARTIFACT_PATH,
   LOGS_DIR,
   AI_TESTS_PLUGIN_ID
-} from './shared/constants.js';
+} from './shared/constants';
 
 const schemaRef = (fragment: string) => ({
   zod: `@kb-labs/ai-tests-contracts/schema#${fragment}`

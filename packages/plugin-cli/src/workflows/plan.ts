@@ -1,5 +1,5 @@
-import type { PlanTestsInput, AiTestsApplicationServices } from '../application/index.js';
-import { planTests } from '../application/index.js';
+import type { PlanTestsInput, AiTestsApplicationServices } from '../application/index';
+import { planTests } from '../application/index';
 
 export interface PlanWorkflowContext {
   services: AiTestsApplicationServices;

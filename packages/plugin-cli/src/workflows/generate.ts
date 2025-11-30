@@ -1,5 +1,5 @@
-import type { GenerateTestsInput, AiTestsApplicationServices } from '../application/index.js';
-import { generateTests } from '../application/index.js';
+import type { GenerateTestsInput, AiTestsApplicationServices } from '../application/index';
+import { generateTests } from '../application/index';
 
 export interface GenerateWorkflowContext {
   services: AiTestsApplicationServices;

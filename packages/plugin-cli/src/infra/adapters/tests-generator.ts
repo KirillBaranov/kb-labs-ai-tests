@@ -1,5 +1,5 @@
 import type { TestGenerationRequest, TestGenerationResult } from '@kb-labs/ai-tests-contracts';
-import type { MindTestContext, TestsGenerator } from '../../application/types.js';
+import type { MindTestContext, TestsGenerator } from '../../application/types';
 
 function buildBlocks(
   request: TestGenerationRequest,

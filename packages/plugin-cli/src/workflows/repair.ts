@@ -1,5 +1,5 @@
-import type { RepairTestsInput, AiTestsApplicationServices } from '../application/index.js';
-import { repairTests } from '../application/index.js';
+import type { RepairTestsInput, AiTestsApplicationServices } from '../application/index';
+import { repairTests } from '../application/index';
 
 export interface RepairWorkflowContext {
   services: AiTestsApplicationServices;

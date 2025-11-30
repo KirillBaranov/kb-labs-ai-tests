@@ -1,7 +1,7 @@
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
-import type { NormalizedAiTestsConfig } from '../../domain/config.js';
-import type { TestRunnerAdapter, TestRunnerOutput } from '../../application/types.js';
+import type { NormalizedAiTestsConfig } from '../../domain/config';
+import type { TestRunnerAdapter, TestRunnerOutput } from '../../application/types';
 
 const execAsync = promisify(exec);
 

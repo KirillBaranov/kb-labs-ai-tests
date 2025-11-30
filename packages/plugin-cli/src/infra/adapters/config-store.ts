@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { KB_CONFIG_FILE } from '../../shared/constants.js';
-import type { AiTestsConfigStore } from '../../application/types.js';
+import { KB_CONFIG_FILE } from '../../shared/constants';
+import type { AiTestsConfigStore } from '../../application/types';
 
 interface RawKbConfig {
   aiTests?: unknown;

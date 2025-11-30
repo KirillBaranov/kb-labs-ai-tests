@@ -11,8 +11,8 @@ import {
   PLAN_ARTIFACT_PATH,
   RUN_ARTIFACT_PATH,
   SUGGESTIONS_DIR
-} from '../../shared/constants.js';
-import type { AiTestsWorkspace, PlanDetectionResult } from '../../application/types.js';
+} from '../../shared/constants';
+import type { AiTestsWorkspace, PlanDetectionResult } from '../../application/types';
 
 async function pathExists(target: string): Promise<boolean> {
   try {

@@ -1,6 +1,6 @@
-import { AiTestsConfigModel } from '../domain/config.js';
-import { DEFAULT_TESTS_DIR } from '../shared/constants.js';
-import { createCliServices } from '../infra/services.js';
+import { AiTestsConfigModel } from '../domain/config';
+import { DEFAULT_TESTS_DIR } from '../shared/constants';
+import { createCliServices } from '../infra/services';
 
 export async function run(): Promise<void> {
   const services = createCliServices();

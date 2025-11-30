@@ -1,5 +1,5 @@
-import type { RunTestsInput, AiTestsApplicationServices } from '../application/index.js';
-import { runTests } from '../application/index.js';
+import type { RunTestsInput, AiTestsApplicationServices } from '../application/index';
+import { runTests } from '../application/index';
 
 export interface RunWorkflowContext {
   services: AiTestsApplicationServices;

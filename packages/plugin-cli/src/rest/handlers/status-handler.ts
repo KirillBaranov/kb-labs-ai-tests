@@ -2,12 +2,12 @@ import {
   ITERATIONS_ARTIFACT_PATH,
   PLAN_ARTIFACT_PATH,
   RUN_ARTIFACT_PATH
-} from '../../shared/constants.js';
+} from '../../shared/constants';
 import {
   StatusRequestSchema,
   StatusResponseSchema,
   type StatusRequest
-} from '../schemas/status-schema.js';
+} from '../schemas/status-schema';
 
 interface HandlerContext {
   requestId?: string;

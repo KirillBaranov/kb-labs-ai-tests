@@ -7,15 +7,15 @@ import type {
   MindTestClient,
   TestsGenerator,
   TestRunnerAdapter
-} from '../../src/application/types.js';
+} from '../../src/application/types';
 import {
   planTests,
   generateTests,
   runTests,
   repairTests,
   initTests
-} from '../../src/application/index.js';
-import { createConsoleLogger } from '../../src/infra/adapters/logger.js';
+} from '../../src/application/index';
+import { createConsoleLogger } from '../../src/infra/adapters/logger';
 
 function createInMemoryWorkspace(): { workspace: AiTestsWorkspace; state: any } {
   const state = {

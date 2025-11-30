@@ -1,4 +1,4 @@
-import type { MindTestClient } from '../../application/types.js';
+import type { MindTestClient } from '../../application/types';
 
 function createSummary(path: string): string {
   const segments = path.split(/[\\/]/).slice(-2).join('/');

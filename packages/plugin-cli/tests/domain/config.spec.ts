@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { AiTestsConfigModel } from '../../src/domain/config.js';
-import { IterationHistory, IterationRecordBuilder } from '../../src/domain/iteration.js';
+import { AiTestsConfigModel } from '../../src/domain/config';
+import { IterationHistory, IterationRecordBuilder } from '../../src/domain/iteration';
 
 describe('AiTestsConfigModel', () => {
   it('normalizes partial config with defaults and runner command', () => {

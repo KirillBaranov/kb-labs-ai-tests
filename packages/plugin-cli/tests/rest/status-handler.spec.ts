@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { handleStatus } from '../../src/rest/handlers/status-handler.js';
+import { handleStatus } from '../../src/rest/handlers/status-handler';
 
 describe('handleStatus', () => {
   it('returns default artifact metadata when called without args', async () => {
