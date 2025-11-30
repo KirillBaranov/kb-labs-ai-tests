@@ -5,8 +5,8 @@ import {
   TestGenerationResultSchema,
   TestPlanSummarySchema,
   TestRunResultSchema
-} from './artifacts.schema.js';
-import { schemaReferenceSchema } from './api.schema.js';
+} from './artifacts.schema';
+import { schemaReferenceSchema } from './api.schema';
 
 export const InitCommandInputSchema = z.object({
   testsDir: z.string().optional(),

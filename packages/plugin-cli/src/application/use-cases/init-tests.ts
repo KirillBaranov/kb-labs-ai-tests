@@ -1,6 +1,6 @@
-import type { InitTestsInput, InitTestsOutput, AiTestsApplicationServices } from '../types.js';
-import { AiTestsConfigModel } from '../../domain/config.js';
-import { TEST_README_CONTENT } from '../../shared/constants.js';
+import type { InitTestsInput, InitTestsOutput, AiTestsApplicationServices } from '../types';
+import { AiTestsConfigModel } from '../../domain/config';
+import { TEST_README_CONTENT } from '../../shared/constants';
 
 const PLUGIN_VERSION = process.env.KB_AI_TESTS_VERSION ?? '0.0.1';
 

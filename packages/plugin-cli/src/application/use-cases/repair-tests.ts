@@ -1,8 +1,8 @@
 import path from 'node:path';
-import type { RepairTestsInput, RepairTestsOutput, AiTestsApplicationServices } from '../types.js';
+import type { RepairTestsInput, RepairTestsOutput, AiTestsApplicationServices } from '../types';
 import type { TestGenerationResult } from '@kb-labs/ai-tests-contracts';
-import { AiTestsConfigModel } from '../../domain/config.js';
-import { IterationHistory, IterationRecordBuilder } from '../../domain/iteration.js';
+import { AiTestsConfigModel } from '../../domain/config';
+import { IterationHistory, IterationRecordBuilder } from '../../domain/iteration';
 
 function deriveTestPath(sourcePath: string, testsDir: string): string {
   const parsed = path.parse(sourcePath);

@@ -7,8 +7,8 @@ import type {
   TestGenerationResult,
   TestRunResult
 } from '@kb-labs/ai-tests-contracts';
-import type { NormalizedAiTestsConfig } from '../domain/config.js';
-import type { Logger } from '../infra/adapters/logger.js';
+import type { NormalizedAiTestsConfig } from '../domain/config';
+import type { Logger } from '../infra/adapters/logger';
 
 export interface AiTestsConfigStore {
   read(): Promise<AiTestsConfig | undefined>;

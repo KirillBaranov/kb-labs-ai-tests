@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { pluginContractsManifest } from '../src/contract.js';
-import { parsePluginContracts } from '../src/schema/contract.schema.js';
-import { contractsVersion } from '../src/version.js';
+import { pluginContractsManifest } from '../src/contract';
+import { parsePluginContracts } from '../src/schema/contract.schema';
+import { contractsVersion } from '../src/version';
 
 describe('pluginContractsManifest', () => {
   it('is valid according to the schema', () => {

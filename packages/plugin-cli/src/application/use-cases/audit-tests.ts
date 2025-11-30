@@ -1,4 +1,4 @@
-import type { AuditTestsInput, AuditTestsOutput, AiTestsApplicationServices } from '../types.js';
+import type { AuditTestsInput, AuditTestsOutput, AiTestsApplicationServices } from '../types';
 
 function computeScore(params: { planExists: boolean; runStatus?: string; iterations: number }): number {
   let score = 40;

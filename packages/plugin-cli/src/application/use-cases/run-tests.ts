@@ -1,5 +1,5 @@
-import type { RunTestsInput, RunTestsOutput, AiTestsApplicationServices } from '../types.js';
-import { AiTestsConfigModel } from '../../domain/config.js';
+import type { RunTestsInput, RunTestsOutput, AiTestsApplicationServices } from '../types';
+import { AiTestsConfigModel } from '../../domain/config';
 
 export async function runTests(input: RunTestsInput, services: AiTestsApplicationServices): Promise<RunTestsOutput> {
   const configModel = AiTestsConfigModel.from(await services.configStore.read());

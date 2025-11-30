@@ -1,6 +1,6 @@
-import type { PlanTestsInput, PlanTestsOutput, AiTestsApplicationServices } from '../types.js';
-import { AiTestsConfigModel } from '../../domain/config.js';
-import { TestPlan } from '../../domain/plan.js';
+import type { PlanTestsInput, PlanTestsOutput, AiTestsApplicationServices } from '../types';
+import { AiTestsConfigModel } from '../../domain/config';
+import { TestPlan } from '../../domain/plan';
 import type { TestPlanTarget, TestPriority, TestKind } from '@kb-labs/ai-tests-contracts';
 
 function inferPriority(filePath: string): TestPriority {

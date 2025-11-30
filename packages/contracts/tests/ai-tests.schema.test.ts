@@ -9,7 +9,7 @@ import {
   PlanCommandOutputSchema,
   TestGenerationResultSchema,
   TestRunResultSchema
-} from '../src/schema.js';
+} from '../src/schema';
 
 const samplePlan = {
   generatedAt: new Date('2024-01-01T00:00:00.000Z').toISOString(),
