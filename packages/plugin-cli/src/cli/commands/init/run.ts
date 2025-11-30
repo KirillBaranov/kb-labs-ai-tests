@@ -1,8 +1,8 @@
-import { defineCommand, type CommandResult } from '@kb-labs/cli-command-kit';
-import type { InitTestsInput, InitTestsOutput } from '../../../application/index.js';
-import { initTests } from '../../../application/index.js';
-import { createCliServices, type AiTestsCliContext } from '../../context.js';
-import { logCliInvocation } from '../../utils.js';
+import { defineCommand, type CommandResult } from '@kb-labs/shared-command-kit';
+import type { InitTestsInput, InitTestsOutput } from '../../../application/index';
+import { initTests } from '../../../application/index';
+import { createCliServices, type AiTestsCliContext } from '../../context';
+import { logCliInvocation } from '../../utils';
 
 export interface InitCommandArgs extends InitTestsInput {
   json?: boolean;

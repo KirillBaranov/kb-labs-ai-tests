@@ -1,8 +1,8 @@
-import { defineCommand, type CommandResult } from '@kb-labs/cli-command-kit';
-import type { GenerateTestsInput, GenerateTestsOutput } from '../../../application/index.js';
-import { generateTests } from '../../../application/index.js';
-import { createCliServices, type AiTestsCliContext } from '../../context.js';
-import { logCliInvocation } from '../../utils.js';
+import { defineCommand, type CommandResult } from '@kb-labs/shared-command-kit';
+import type { GenerateTestsInput, GenerateTestsOutput } from '../../../application/index';
+import { generateTests } from '../../../application/index';
+import { createCliServices, type AiTestsCliContext } from '../../context';
+import { logCliInvocation } from '../../utils';
 
 export interface GenerateCommandArgs extends Omit<GenerateTestsInput, 'targets'> {
   json?: boolean;
