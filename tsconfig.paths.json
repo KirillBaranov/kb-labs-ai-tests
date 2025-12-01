@@ -4,10 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "@kb-labs/ai-tests-contracts": [
-        "packages/contracts/src/index.ts"
+        "packages/ai-tests-contracts/src/index.ts"
       ],
       "@kb-labs/ai-tests-contracts/*": [
-        "packages/contracts/src/*"
+        "packages/ai-tests-contracts/src/*"
       ],
       "@kb-labs/core-sys": [
         "../kb-labs-core/packages/core-sys/src/index.ts"
@@ -16,16 +16,16 @@
         "../kb-labs-core/packages/core-sys/src/*"
       ],
       "@kb-labs/plugin-manifest": [
-        "../kb-labs-plugin/packages/manifest/src/index.ts"
+        "../kb-labs-plugin/packages/plugin-manifest/src/index.ts"
       ],
       "@kb-labs/plugin-manifest/*": [
-        "../kb-labs-plugin/packages/manifest/src/*"
+        "../kb-labs-plugin/packages/plugin-manifest/src/*"
       ],
       "@kb-labs/plugin-runtime": [
-        "../kb-labs-plugin/packages/runtime/src/index.ts"
+        "../kb-labs-plugin/packages/plugin-runtime/src/index.ts"
       ],
       "@kb-labs/plugin-runtime/*": [
-        "../kb-labs-plugin/packages/runtime/src/*"
+        "../kb-labs-plugin/packages/plugin-runtime/src/*"
       ],
       "@kb-labs/shared-command-kit": [
         "../kb-labs-shared/packages/shared-command-kit/src/index.ts"
